@@ -1,42 +1,40 @@
 
-let myLeads = [];
+let myLeads = JSON.parse(localStorage.getItem('myLeads')) || [];
 const inputEl = document.getElementById("input-el");
 const inputBtn = document.getElementById("input-btn");
 const deleteBtn = document.getElementById("delete-btn");
 const ulEl = document.getElementById("ul-el");
 
-renderLeads();
+if (myLeads) {
+    render(myLeads);
+}
 
 inputBtn.addEventListener("click", function () {
-    if(!inputEl.value) {
+    if (!inputEl.value) {
         return;
     }
     myLeads.push(inputEl.value);
-    inputEl.value = "";
     localStorage.setItem('myLeads', JSON.stringify(myLeads));
-    renderLeads();
+    inputEl.value = "";
+    render(myLeads);
 })
 
-deleteBtn.addEventListener("click", () => {
-    clearLeads();
+deleteBtn.addEventListener("dblclick", () => {
+    localStorage.clear();
+    myLeads = [];
+    render(myLeads);
 })
 
-function renderLeads() {
-    myLeads = JSON.parse(localStorage.getItem('myLeads')) || [];
+function render(leads) {
     let listItems = "";
-    for (let i = 0; i < myLeads.length; i++) {
+    for (let i = 0; i < leads.length; i++) {
         listItems += `
             <li>
-                <a href=${myLeads[i]} target=_blank>
-                    ${myLeads[i]}
+                <a href=${leads[i]} target=_blank>
+                    ${leads[i]}
                 </a>
             </li>
         `
     }
     ulEl.innerHTML = listItems;
-}
-
-function clearLeads() {
-    localStorage.clear();
-    renderLeads();
 }
